@@ -5,21 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e9e9135a-8bc8-4d31-be99-bc4791c709b7" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.Rproj.user/5C400A73/pcs/files-pane.pper" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.Rproj.user/5C400A73/pcs/source-pane.pper" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.Rproj.user/5C400A73/pcs/windowlayoutstate.pper" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.Rproj.user/5C400A73/pcs/workbench-pane.pper" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.Rproj.user/5C400A73/persistent-state" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.Rproj.user/5C400A73/rmd-outputs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.Rproj.user/5C400A73/saved_source_markers" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.Rproj.user/5C400A73/sources/per/t/3DF1B905" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.Rproj.user/5C400A73/sources/per/t/3DF1B905-contents" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.Rproj.user/5C400A73/sources/per/t/73AFCEA4" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.Rproj.user/5C400A73/sources/per/t/73AFCEA4-contents" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.Rproj.user/5C400A73/sources/per/u/A46F2E73" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.Rproj.user/5C400A73/sources/per/u/A46F2E73-contents" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.Rproj.user/shared/notebooks/patch-chunk-names" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solar_wind.py" beforeDir="false" afterPath="$PROJECT_DIR$/solar_wind.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,7 +47,7 @@
     "Python.tuya.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master",
+    "git-widget-placeholder": "main",
     "ignore.virus.scanning.warn.message": "true",
     "last_opened_file_path": "C:/Users/lukze/Desktop/Inżynier",
     "node.js.detected.package.eslint": "true",
@@ -260,6 +246,7 @@
       <workItem from="1734609413650" duration="7459000" />
       <workItem from="1734619683137" duration="1846000" />
       <workItem from="1734680858514" duration="2040000" />
+      <workItem from="1734684192614" duration="13000" />
     </task>
     <servers />
   </component>

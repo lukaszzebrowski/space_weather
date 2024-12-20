@@ -3,8 +3,6 @@ import requests
 import plotly.graph_objects as go
 from datetime import datetime
 from streamlit_autorefresh import st_autorefresh
-import streamlit.components.v1 as components
-
 
 def create_gauge(speed, density, time_tag):
     fig = go.Figure(go.Indicator(
