@@ -11,3 +11,20 @@ class DataProcessor:
             return data[-1]
         else:
             return None
+
+    @staticmethod
+    def process_radiation_data(data):
+        """Przetwarza dane promieniowania rentgenowskiego."""
+        if data:
+            # Zakładamy, że dane są posortowane chronologicznie
+            return data
+        else:
+            return []
+
+    @staticmethod
+    def get_latest_radiation_data(data):
+        """Zwraca najnowszy pomiar promieniowania."""
+        if data:
+            return data[-1]
+        else:
+            return None
