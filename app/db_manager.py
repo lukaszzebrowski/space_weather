@@ -90,18 +90,25 @@ class DBManager:
         conn.close()
         return (row is not None)
 
-    def get_recent_solarwind(self, limit=5):
+    def get_recent_solarwind(self, limit):
         """
         Zwraca ostatnie `limit` wpisów z wiatru słonecznego, malejąco po id.
         """
         conn = sqlite3.connect(self.db_name)
         c = conn.cursor()
-        c.execute("""
-            SELECT id, time_tag, proton_speed, proton_density
-            FROM solarwind
-            ORDER BY id DESC
-            LIMIT ?
-        """, (limit,))
+        if limit is None:  # Jeśli limit jest None, pobierz wszystko
+            c.execute("""
+                SELECT id, time_tag, proton_speed, proton_density
+                FROM solarwind
+                ORDER BY id DESC
+            """)
+        else:  # Jeśli limit jest ustawiony, ogranicz wyniki
+            c.execute("""
+                SELECT id, time_tag, proton_speed, proton_density
+                FROM solarwind
+                ORDER BY id DESC
+                LIMIT ?
+            """, (limit,))
         rows = c.fetchall()
         conn.close()
         return rows

@@ -5,12 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e9e9135a-8bc8-4d31-be99-bc4791c709b7" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/app/db_manager.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/api.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/data_fetcher.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/data_fetcher.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/db_manager.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/db_manager.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/plot.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/plot.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/data_fetcher.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gaia.py" beforeDir="false" afterPath="$PROJECT_DIR$/gaia.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/solar_wind_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/pages/solar_wind_data.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/space_weather.db" beforeDir="false" afterPath="$PROJECT_DIR$/space_weather.db" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -72,7 +75,7 @@
       <recent name="C:\Users\lukze\Desktop\Inżynier\pages" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.solar_wind">
+  <component name="RunManager" selected="Python.gaia">
     <configuration name="gaia" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Inżynier" />
       <option name="ENV_FILES" value="" />
@@ -190,11 +193,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.gaia" />
         <item itemvalue="Python.solar_wind" />
         <item itemvalue="Python.test3" />
         <item itemvalue="Python.test2" />
         <item itemvalue="Python.test" />
-        <item itemvalue="Python.gaia" />
       </list>
     </recent_temporary>
   </component>
@@ -256,7 +259,8 @@
       <workItem from="1734691193593" duration="909000" />
       <workItem from="1734692465309" duration="1132000" />
       <workItem from="1736326375429" duration="74000" />
-      <workItem from="1736407971123" duration="5928000" />
+      <workItem from="1736407971123" duration="6048000" />
+      <workItem from="1736415908926" duration="8158000" />
     </task>
     <servers />
   </component>
@@ -277,8 +281,8 @@
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Inynier$gromady.coverage" NAME="gromady Coverage Results" MODIFIED="1729592596788" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/LOFAR" />
     <SUITE FILE_PATH="coverage/Inynier$test3.coverage" NAME="test3 Coverage Results" MODIFIED="1732963062487" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/Inynier$gaia.coverage" NAME="gaia Coverage Results" MODIFIED="1732958503854" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Inynier$test.coverage" NAME="test Coverage Results" MODIFIED="1732962930088" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Inynier$gaia.coverage" NAME="gaia Coverage Results" MODIFIED="1736427177563" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Inynier$tuya.coverage" NAME="tuya Coverage Results" MODIFIED="1734532454476" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Inynier$main.coverage" NAME="main Coverage Results" MODIFIED="1715673068611" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/LOFAR" />
     <SUITE FILE_PATH="coverage/Inynier$space_weather.coverage" NAME="space_weather Coverage Results" MODIFIED="1729585966875" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/LOFAR" />

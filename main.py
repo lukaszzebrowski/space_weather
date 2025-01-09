@@ -1,31 +1,59 @@
 import streamlit as st
-import pandas as pd
 from datetime import datetime
 from streamlit_autorefresh import st_autorefresh
 
 # Nasze moduły
 from app.db_manager import DBManager
-from app.data_fetcher import NOAADataFetcher, XRayDataFetcher
+from app.data_fetcher import NOAADataFetcher, XRayDataFetcher, APODDataFetcher
 from app.plot import DataPlot
 from app.gauge import GaugePlot
 
-st.set_page_config(layout="wide", page_title="Dashboard Pogody Kosmicznej")
-
+# Ustawienia strony Streamlit
+st.set_page_config(
+    layout="wide",
+    page_title="Dashboard Pogody Kosmicznej",
+    page_icon="☀️",
+    initial_sidebar_state="collapsed"  # Opcje: "auto", "expanded", "collapsed"
+)
+def set_background_image(image_url):
+    """
+    Ustawia tło aplikacji Streamlit za pomocą CSS.
+    """
+    st.markdown(
+        f"""
+        <style>
+        .stApp {{
+            background-image: url("{image_url}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }}
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
 class SpaceWeatherDashboard:
     def __init__(self):
         # Baza
         self.db = DBManager()
 
         # 1) Fetcher wiatru słonecznego (DSCOVR)
-        self.wind_url = "https://services.swpc.noaa.gov/json/rtsw/rtsw_wind_1m.json"
-        self.wind_fetcher = NOAADataFetcher(self.wind_url)
+        self.wind_fetcher = NOAADataFetcher()
 
         # 2) Fetcher X-Ray (latest)
-        self.xray_latest_url = "https://services.swpc.noaa.gov/json/goes/primary/xray-flares-latest.json"
-        self.xray_fetcher = XRayDataFetcher(self.xray_latest_url)
+        self.xray_fetcher = XRayDataFetcher()
+
+        # Fetcher dla NASA APOD
+        self.apod_fetcher = APODDataFetcher()  # Dodanie fetchera dla NASA APOD
 
         self.last_refresh = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
+    def set_dashboard_background(self):
+        """
+        Pobiera i ustawia tło z NASA APOD.
+        """
+        image_url = self.apod_fetcher.fetch_background_image_url()
+        if image_url:
+            set_background_image(image_url)
     def fetch_and_save_solarwind(self):
         """Pobiera dane wiatru, zapisuje najnowszy rekord do bazy, jeśli jest nowy."""
         data = self.wind_fetcher.fetch_data()
@@ -80,16 +108,13 @@ class SpaceWeatherDashboard:
         col1, col2 = st.columns([2, 2])
 
         with col1:
-            st.subheader("Ostatnie dane X-Ray (z bazy)")
-            # Pobierz np. ostatnie 5 wpisów
-            xray_rows = self.db.get_recent_xray(limit=4)
-            if xray_rows:
-                xray_df = DataPlot.create_xray_table(xray_rows)
-                st.table(xray_df)
-            else:
-                st.warning("Brak danych X-Ray w bazie.")
 
             st.subheader("Wiatr Słoneczny (DSCOVR)")
+            # Tabela z 4 wpisami wiatru
+            st.write("Ostatnie 4 wpisy wiatru słonecznego:")
+            sw_rows = self.db.get_recent_solarwind(limit=4)  # lista krotek z bazy
+            df_sw = DataPlot.create_solarwind_table(sw_rows)  # tworzymy DataFrame
+            st.table(df_sw)
             # Najnowszy wpis z bazy dla wiatru
             latest_sw = self.db.get_latest_solarwind()
             if latest_sw:
@@ -98,14 +123,17 @@ class SpaceWeatherDashboard:
 
                 gauge_fig = GaugePlot.create_gauge(speed_db, density_db, time_tag_db)
                 st.plotly_chart(gauge_fig, use_container_width=True)
-
-                # (Opcjonalnie) Tabela z 4 wpisami wiatru
-                st.write("Ostatnie 4 wpisy wiatru słonecznego:")
-                sw_rows = self.db.get_recent_solarwind(limit=4)  # lista krotek z bazy
-                df_sw = DataPlot.create_solarwind_table(sw_rows)  # tworzymy DataFrame
-                st.table(df_sw)
             else:
                 st.warning("Brak danych wiatru słonecznego w bazie.")
+
+            st.subheader("Ostatnie dane X-Ray (z bazy)")
+            # Pobierz np. ostatnie 5 wpisów
+            xray_rows = self.db.get_recent_xray(limit=20)
+            if xray_rows:
+                xray_df = DataPlot.create_xray_table(xray_rows)
+                st.table(xray_df)
+            else:
+                st.warning("Brak danych X-Ray w bazie.")
 
         with col2:
             st.subheader("Obrazy Słońca (SOHO)")
@@ -127,6 +155,9 @@ class SpaceWeatherDashboard:
             )
 
     def run(self):
+        # Ustaw tło
+        self.set_dashboard_background()
+
         # Odśwież co minutę
         st_autorefresh(interval=60000, limit=None, key="data_refresh")
         self.last_refresh = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
