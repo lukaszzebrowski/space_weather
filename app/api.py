@@ -29,9 +29,9 @@ class XRayDataFetcher:
         self.url = url
 
     def fetch_data(self):
-        """Pobiera dane promieniowania rentgenowskiego z ostatnich 7 dni."""
+        """Pobiera dane promieniowania rentgenowskiego (bieżące) z xray-flares-latest."""
         response = requests.get(self.url)
         if response.status_code == 200:
             return response.json()
         else:
-            raise Exception("Błąd podczas pobierania danych z API promieniowania rentgenowskiego (7 dni).")
+            raise Exception("Błąd podczas pobierania danych z API xray-flares-latest.")
