@@ -2,50 +2,72 @@ import pandas as pd
 
 class DataPlot:
     @staticmethod
-    def create_table(data):
+    def create_xray_table(data):
         """
-        Tworzy tabelę (DataFrame) z aktualnymi danymi promieniowania (xray-flares-latest).
-        Zwraca obiekt DataFrame, który można wyświetlić np. st.table(df).
-        """
-        df = pd.DataFrame(data)
+        Tworzy DataFrame z danymi X-Ray i zwraca go,
+        posortowany według time_tag (od najstarszego do najnowszego),
+        a następnie formatuje kolumnę time_tag jako "YYYY-MM-DD HH:MM:SS" bez strefy czasowej.
 
-        # Wybieramy kolumny z 'xray-flares-latest.json'
-        # Przykładowa struktura:
-        # {
-        #   "time_tag": "2025-01-09T07:59:00Z",
-        #   "satellite": 18,
-        #   "current_class": "C1.0",
-        #   "current_ratio": 0.0136,
-        #   "current_int_xrlong": 0.0005970,
-        #   "begin_time": "2025-01-09T04:29:00Z",
-        #   "begin_class": "B7.8",
-        #   "max_time": "Unk",
-        #   "end_time": "Unk",
-        #   "max_class": null,
-        #   ...
-        # }
-        columns_to_show = [
+        data to lista krotek: (id, time_tag, satellite, current_class,
+                               current_ratio, current_int_xrlong, begin_time)
+        """
+        df = pd.DataFrame(data, columns=[
+            "ID",
             "time_tag",
             "satellite",
             "current_class",
             "current_ratio",
             "current_int_xrlong",
-            "begin_time",
+            "begin_time"
+        ])
 
-        ]
-        # Upewnij się, że kolumny faktycznie istnieją w JSON — w razie braku niektórych,
-        # możesz je dodać warunkowo lub pominąć
-        df = df[columns_to_show]
+        # Usuwamy kolumnę ID, jeśli nie chcesz jej wyświetlać
+        df.drop(columns=["ID"], inplace=True)
 
-        # Zmieniamy nazwy kolumn na bardziej czytelne
-        df.rename(columns={
-            "time_tag": "Aktualny czas pomiaru",
-            "satellite": "Satelita",
-            "current_class": "Aktualna klasa (X-Ray)",
-            "current_ratio": "Ratio",
-            "current_int_xrlong": "Natężenie XR-long",
-            "begin_time": "Czas rozpoczęcia",
+        # 1) Konwersja na datetime (z interpretacją ewentualnej strefy jako UTC)
+        df["time_tag"] = pd.to_datetime(df["time_tag"], errors="coerce", utc=True)
 
-        }, inplace=True)
+        # 2) Usuwamy strefę czasową, staje się „naiwny” czas
+        df["time_tag"] = df["time_tag"].dt.tz_localize(None)
+
+        # 3) Sortowanie rosnąco po time_tag (najstarsze na górze)
+        df.sort_values("time_tag", ascending=True, inplace=True)
+
+        # 4) Formatowanie do "YYYY-MM-DD HH:MM:SS"
+        df["time_tag"] = df["time_tag"].dt.strftime("%d-%m-%Y %H:%M")
+        df.index = [""] * len(df)  # Ustawiamy puste etykiety dla każdego wiersza
+
+        return df
+
+    @staticmethod
+    def create_solarwind_table(data):
+        """
+        Tworzy DataFrame z danymi wiatru słonecznego i zwraca go,
+        posortowany według time_tag (od najstarszego do najnowszego),
+        a następnie formatuje kolumnę time_tag jako "YYYY-MM-DD HH:MM:SS" bez strefy czasowej.
+
+        data to lista krotek: (id, time_tag, proton_speed, proton_density)
+        """
+        df = pd.DataFrame(data, columns=[
+            "ID",
+            "time_tag",
+            "proton_speed",
+            "proton_density"
+        ])
+
+        df.drop(columns=["ID"], inplace=True)
+
+        # Konwersja na datetime z interpretacją strefy jako UTC
+        df["time_tag"] = pd.to_datetime(df["time_tag"], errors="coerce", utc=True)
+
+        # Usunięcie strefy (tz_localize(None))
+        df["time_tag"] = df["time_tag"].dt.tz_localize(None)
+
+        # Sortowanie rosnąco
+        df.sort_values("time_tag", ascending=True, inplace=True)
+
+        # Formatowanie
+        df["time_tag"] = df["time_tag"].dt.strftime("%d-%m-%Y %H:%M")
+        df.index = [""] * len(df)  # Ustawiamy puste etykiety dla każdego wiersza
 
         return df
