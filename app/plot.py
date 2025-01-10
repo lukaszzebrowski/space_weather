@@ -5,53 +5,40 @@ import streamlit as st
 
 class DataPlot:
     @staticmethod
-    def create_xray_table(data):
+    @staticmethod
+    def create_xray_event_table(event_data):
         """
-        Tworzy DataFrame z danymi X-Ray i zwraca go,
-        posortowany według time_tag (od najstarszego do najnowszego),
-        a następnie formatuje kolumnę time_tag jako "YYYY-MM-DD HH:MM:SS" bez strefy czasowej.
-
-        data to lista krotek: (id, time_tag, satellite, current_class,
-                               current_ratio, current_int_xrlong, begin_time)
+        Tworzy tabelę dla najnowszego rozbłysku X-Ray w formacie:
+        Current, Beginning, Maximum, End.
         """
-        df = pd.DataFrame(data, columns=[
-            "ID",
-            "time_tag",
-            "satellite",
-            "current_class",
-            "current_ratio",
-            "current_int_xrlong",
-            "begin_time"
-        ])
+        if not event_data:
+            st.warning("Brak danych o rozbłysku X-Ray.")
+            return None
 
-        # Usuwamy kolumnę ID, jeśli nie chcesz jej wyświetlać
-        df.drop(columns=["ID"], inplace=True)
+        (satellite, current_class, current_ratio, current_int_xrlong,
+         begin_time, begin_class, max_time, max_class,
+         max_xrlong, end_time, end_class) = event_data
 
-        # 1) Konwersja na datetime (z interpretacją ewentualnej strefy jako UTC)
-        df["time_tag"] = pd.to_datetime(df["time_tag"], errors="coerce", utc=True)
-        df["begin_time"] = pd.to_datetime(df["begin_time"], errors="coerce", utc=True)
+        # Tworzymy DataFrame z gotowymi wpisami
+        data = {
+            "Faza": ["Current", "Beginning", "Maximum", "End"],
+            "Czas": [
+                pd.to_datetime(begin_time).strftime("%d %b %Y %H:%M:%S GMT"),
+                pd.to_datetime(begin_time).strftime("%d %b %Y %H:%M:%S GMT"),
+                pd.to_datetime(max_time).strftime("%d %b %Y %H:%M:%S GMT"),
+                pd.to_datetime(end_time).strftime("%d %b %Y %H:%M:%S GMT")
+            ],
+            "Klasa rozbłysku": [current_class, begin_class, max_class, end_class],
+            "Dodatkowe dane": [
+                f"Ratio {current_ratio:.3f}",
+                "",
+                f"Integrated flux: {max_xrlong:.1e} J m-2",
+                ""
+            ]
+        }
 
-        # 2) Usuwamy strefę czasową, staje się „naiwny” czas
-        df["time_tag"] = df["time_tag"].dt.tz_localize(None)
-
-        # 3) Sortowanie rosnąco po time_tag (najstarsze na górze)
-        df.sort_values("time_tag", ascending=False, inplace=True)
-
-        # 4) Formatowanie do "YYYY-MM-DD HH:MM:SS"
-        df["time_tag"] = df["time_tag"].dt.strftime("%d-%m-%Y %H:%M")
-        df["begin_time"] = df["begin_time"].dt.strftime("%d-%m-%Y %H:%M")
-        df.index = [""] * len(df)  # Ustawiamy puste etykiety dla każdego wiersza
-
-        df.rename(columns={
-            "time_tag": "Znacznik czasu",
-            "satellite": "Satelita",
-            "current_class": "Klasa rozbłysku",
-            "current_ratio": "Stosunek promieniowania",
-            "current_int_xrlong": "Natężenie promieniowania",
-            "begin_time": "Czas rozpoczęcia"
-        }, inplace=True)
-
-        return df
+        df = pd.DataFrame(data)
+        st.table(df)
 
     @staticmethod
     def create_solarwind_table(data):
@@ -341,5 +328,152 @@ class DataPlot:
             labels={"time_tag": "Czas", "proton_temperature": "Temperatura (K)"}
         )
         fig.update_layout(width=800, height=500)
+
+        return fig
+
+    import plotly.express as px
+    import pandas as pd
+    import streamlit as st
+
+    @staticmethod
+    def create_goes_flux_line_plot(df):
+        """
+        Tworzy wykres liniowy natężenia promieniowania X-ray (flux) w czasie
+        dla satelitów GOES-16 i GOES-18.
+        """
+
+        # 1. Sprawdzenie obecności wymaganych kolumn
+        required_columns = {"time_tag", "satellite", "flux"}
+        missing_columns = required_columns - set(df.columns)
+
+        if missing_columns:
+            st.error(f"Brakuje kolumn w danych: {missing_columns}")
+            return None
+
+        # 2. Kopia DataFrame, by nie modyfikować oryginału
+        df_plot = df.copy()
+
+        # 3. Konwersja 'time_tag' do datetime
+        df_plot["time_tag"] = pd.to_datetime(df_plot["time_tag"], errors="coerce")
+
+        # 4. Sprawdzenie, czy dane są poprawne
+        if df_plot.empty or df_plot["time_tag"].isna().all():
+            st.warning("Brak poprawnych danych w 'time_tag' do wyświetlenia wykresu.")
+            return None
+
+        # 5. Ustalenie zakresu dat i konwersja na datetime.datetime
+        min_dt = df_plot["time_tag"].min().to_pydatetime()
+        max_dt = df_plot["time_tag"].max().to_pydatetime()
+
+        # 6. Suwaki do wyboru zakresu dat
+        start_dt = st.slider(
+            "Wybierz datę początkową:",
+            min_value=min_dt,
+            max_value=max_dt,
+            value=min_dt,
+            format="DD-MM-YYYY HH:mm",
+            key="start_flux_dt_slider"
+        )
+
+        end_dt = st.slider(
+            "Wybierz datę końcową:",
+            min_value=min_dt,
+            max_value=max_dt,
+            value=max_dt,
+            format="DD-MM-YYYY HH:mm",
+            key="end_flux_dt_slider"
+        )
+
+        # 7. Walidacja zakresu dat
+        if end_dt < start_dt:
+            st.warning("Data końcowa jest wcześniejsza niż data początkowa!")
+            return None
+
+        # 8. Filtrowanie danych w wybranym przedziale czasowym
+        mask = (df_plot["time_tag"] >= start_dt) & (df_plot["time_tag"] <= end_dt)
+        df_filtered = df_plot[mask]
+
+        if df_filtered.empty:
+            st.warning("Brak danych w wybranym przedziale czasowym.")
+            return None
+
+        # 9. Wykres - dwie linie dla satelitów 16 i 18
+        fig = px.line(
+            df_filtered,
+            x="time_tag",
+            y="flux",
+            color="satellite",
+            labels={
+                "time_tag": "Czas",
+                "flux": "Natężenie promieniowania (W/m²)",
+                "satellite": "Satelita"
+            },
+            title="Natężenie promieniowania X-ray GOES-16 i GOES-18 w czasie"
+        )
+
+        fig.update_layout(
+            width=900,
+            height=500,
+            legend_title_text="Satelita",
+            legend=dict(
+                x=0.01,
+                y=0.99,
+                bgcolor='rgba(255,255,255,0)',
+                bordercolor='rgba(0,0,0,0)'
+            )
+        )
+
+        return fig
+
+    @staticmethod
+    def create_goes_flux_simple_plot(df):
+        """
+        Tworzy prosty wykres liniowy natężenia promieniowania X-ray (flux)
+        w czasie dla ostatnich 20 wyników z satelitów GOES-16 i GOES-18.
+        """
+
+        # 1. Sprawdzenie obecności wymaganych kolumn
+        required_columns = {"time_tag", "satellite", "flux"}
+        missing_columns = required_columns - set(df.columns)
+
+        if missing_columns:
+            st.error(f"Brakuje kolumn w danych: {missing_columns}")
+            return None
+
+        # 2. Konwersja 'time_tag' do datetime
+        df["time_tag"] = pd.to_datetime(df["time_tag"], errors="coerce")
+
+        # 3. Sortowanie danych malejąco po czasie i pobranie ostatnich 20 wyników
+        df_sorted = df.sort_values(by="time_tag", ascending=False).head(20)
+
+        # 4. Sortowanie rosnąco dla poprawnego wykresu
+        df_sorted = df_sorted.sort_values(by="time_tag")
+
+        # 5. Tworzenie wykresu
+        fig = px.line(
+            df_sorted,
+            x="time_tag",
+            y="flux",
+            color="satellite",
+            markers=True,  # Dodaje punkty danych na linii
+            labels={
+                "time_tag": "Czas",
+                "flux": "Natężenie promieniowania (W/m²)",
+                "satellite": "Satelita"
+            },
+            title="Natężenie promieniowania X-ray GOES-16 i GOES-18 (20 ostatnich wyników)"
+        )
+
+        fig.update_layout(
+            width=900,
+            height=500,
+            legend_title_text="Satelita",
+            legend=dict(
+                x=0.01,
+                y=0.99,
+                bgcolor='rgba(255,255,255,0)',
+                bordercolor='rgba(0,0,0,0)'
+            )
+        )
 
         return fig

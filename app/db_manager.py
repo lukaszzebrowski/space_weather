@@ -18,7 +18,13 @@ class DBManager:
                 current_class TEXT,
                 current_ratio REAL,
                 current_int_xrlong REAL,
-                begin_time TEXT
+                begin_time TEXT,
+                begin_class TEXT,
+                max_time TEXT,
+                max_class TEXT,
+                max_xrlong REAL,
+                end_time TEXT,
+                end_class TEXT
             )
         ''')
 
@@ -33,18 +39,58 @@ class DBManager:
             )
         ''')
 
+        # Tabela danych GOES (Primary/Secondary)
+        c.execute('''
+                   CREATE TABLE IF NOT EXISTS goes_data (
+                       id INTEGER PRIMARY KEY AUTOINCREMENT,
+                       time_tag TEXT NOT NULL,
+                       satellite INTEGER,
+                       flux REAL,
+                       observed_flux REAL,
+                       electron_correction REAL,
+                       electron_contamination BOOLEAN,
+                       energy TEXT,
+                       UNIQUE(time_tag, satellite)  -- Zapobiega duplikatom
+                   )
+               ''')
+
         conn.commit()
         conn.close()
 
-    # ------------------ XRAY ------------------
-    def insert_xray(self, time_tag, satellite, current_class, current_ratio, current_int_xrlong, begin_time):
+    def insert_xray(self, time_tag, satellite, current_class, current_ratio, current_int_xrlong,
+                    begin_time, begin_class, max_time, max_class, max_xrlong, end_time, end_class):
+        """Zapisuje dane X-Ray do bazy danych."""
         conn = sqlite3.connect(self.db_name)
         c = conn.cursor()
         c.execute("""
-            INSERT INTO xray
-            (time_tag, satellite, current_class, current_ratio, current_int_xrlong, begin_time)
-            VALUES (?, ?, ?, ?, ?, ?)
-        """, (time_tag, satellite, current_class, current_ratio, current_int_xrlong, begin_time))
+            INSERT INTO xray (
+                time_tag,
+                satellite,
+                current_class,
+                current_ratio,
+                current_int_xrlong,
+                begin_time,
+                begin_class,
+                max_time,
+                max_class,
+                max_xrlong,
+                end_time,
+                end_class
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, (
+            time_tag,
+            satellite,
+            current_class,
+            current_ratio,
+            current_int_xrlong,
+            begin_time,
+            begin_class,
+            max_time,
+            max_class,
+            max_xrlong,
+            end_time,
+            end_class
+        ))
         conn.commit()
         conn.close()
 
@@ -56,21 +102,21 @@ class DBManager:
         conn.close()
         return (row is not None)
 
-    def get_recent_xray(self, limit=5):
-        """
-        Zwraca ostatnie `limit` wpisów z xray, posortowane malejąco (najnowsze na górze).
-        """
+    def get_latest_xray_event(self):
+        """Zwraca najnowsze zdarzenie X-Ray ze wszystkimi szczegółami."""
         conn = sqlite3.connect(self.db_name)
         c = conn.cursor()
         c.execute("""
-            SELECT id, time_tag, satellite, current_class, current_ratio, current_int_xrlong, begin_time
+            SELECT satellite, current_class, current_ratio, current_int_xrlong, 
+                   begin_time, begin_class, max_time, max_class, 
+                   max_xrlong, end_time, end_class
             FROM xray
-            ORDER BY id DESC
-            LIMIT ?
-        """, (limit,))
-        rows = c.fetchall()
+            ORDER BY time_tag DESC
+            LIMIT 1
+        """)
+        row = c.fetchone()
         conn.close()
-        return rows
+        return row
 
     # ------------------ SOLAR WIND ------------------
     def insert_solarwind(self, time_tag, proton_speed, proton_density, proton_temperature):
@@ -129,3 +175,60 @@ class DBManager:
         row = c.fetchone()
         conn.close()
         return row
+
+    def check_goes_data_exists(self, time_tag, satellite):
+        """Sprawdza, czy dane GOES z danym time_tag i satelitą już istnieją."""
+        conn = sqlite3.connect(self.db_name)
+        c = conn.cursor()
+        c.execute("""
+            SELECT 1 FROM goes_data
+            WHERE time_tag = ? AND satellite = ?
+        """, (time_tag, satellite))
+        row = c.fetchone()
+        conn.close()
+        return row is not None
+
+    def insert_goes_data(self, time_tag, satellite, flux, observed_flux, electron_correction, electron_contamination,
+                         energy):
+        """Dodaje nowy wpis GOES do bazy danych."""
+        conn = sqlite3.connect(self.db_name)
+        c = conn.cursor()
+        c.execute("""
+            INSERT OR IGNORE INTO goes_data
+            (time_tag, satellite, flux, observed_flux, electron_correction, electron_contamination, energy)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        """, (time_tag, satellite, flux, observed_flux, electron_correction, electron_contamination, energy))
+        conn.commit()
+        conn.close()
+
+    def get_recent_goes_data(self, limit):
+        """Zwraca ostatnie `limit` wpisów z tabeli GOES."""
+        conn = sqlite3.connect(self.db_name)
+        c = conn.cursor()
+        if limit is None:
+            c.execute("""
+            SELECT id, time_tag, satellite, flux, observed_flux, electron_correction, electron_contamination, energy
+            FROM goes_data
+            ORDER BY id DESC
+        """)
+        else:
+            c.execute("""
+                SELECT id, time_tag, satellite, flux, observed_flux, electron_correction, electron_contamination, energy
+                FROM goes_data
+                ORDER BY id DESC
+                LIMIT ?
+            """, (limit,))
+
+        rows = c.fetchall()
+        conn.close()
+        return rows
+
+    def get_all_from_table(self, table_name):
+        """Zwraca wszystkie dane z wybranej tabeli."""
+        conn = sqlite3.connect(self.db_name)
+        c = conn.cursor()
+        c.execute(f"SELECT * FROM {table_name}")
+        rows = c.fetchall()
+        columns = [description[0] for description in c.description]
+        conn.close()
+        return rows, columns

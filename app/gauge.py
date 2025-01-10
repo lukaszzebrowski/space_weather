@@ -1,15 +1,18 @@
 import plotly.graph_objects as go
+from datetime import datetime
 
 class GaugePlot:
     @staticmethod
     def create_gauge(speed, density, time_tag):
+        # Formatowanie daty: dzień-miesiąc-rok godzina:minuta
+        formatted_time_tag = datetime.strptime(time_tag, "%Y-%m-%dT%H:%M:%S").strftime("%d-%m-%Y %H:%M")
         """Tworzy wykres gauge z podanymi danymi."""
         fig = go.Figure(go.Indicator(
             mode="gauge+number",
             value=speed,
             title={'text': f"Prędkość protonów: <b>{speed}(km/s)</b><br>"
                            f"Gęstość protonów: <b>{density} protons/cm3</b><br>"
-                           f"Ostatni pomiar: <b>{time_tag}</b>",
+                           f"Ostatni pomiar: <b>{formatted_time_tag}</b>",
                    'font': {'size': 30}},
             gauge={
                 'axis': {'range': [0, 1000], 'tickwidth': 1, 'tickcolor': "darkblue", 'dtick': 50},

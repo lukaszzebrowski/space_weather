@@ -46,3 +46,25 @@ class APODDataFetcher:
         response.raise_for_status()
         data = response.json()
         return data.get("hdurl", "")  # Pobierz URL zdjęcia
+
+class GOESPrimaryFetcher:
+    def __init__(self, url="https://services.swpc.noaa.gov/json/goes/primary/xrays-1-day.json"):
+        self.url = url
+
+    def fetch_data(self):
+        """Pobiera dane GOES Primary."""
+        response = requests.get(self.url, timeout=10)
+        response.raise_for_status()
+        data = response.json()
+        return data  # Zwraca dane jako listę słowników
+
+class GOESSecondaryFetcher:
+    def __init__(self, url="https://services.swpc.noaa.gov/json/goes/secondary/xrays-1-day.json"):
+        self.url = url
+
+    def fetch_data(self):
+        """Pobiera dane GOES Secondary."""
+        response = requests.get(self.url, timeout=10)
+        response.raise_for_status()
+        data = response.json()
+        return data  # Zwraca dane jako listę słowników
