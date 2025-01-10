@@ -2,13 +2,6 @@ streamlit
 streamlit-autorefresh
 plotly
 pandas
-numpy
-sqlite3
-datetime
+numpy>=1.26.0
 requests
-hashlib
-os
-dotenv
-requests
-plotly.graph_objects
-plotly.express
+python-dotenv
