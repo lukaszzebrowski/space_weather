@@ -29,6 +29,7 @@ class DataPlot:
 
         # 1) Konwersja na datetime (z interpretacją ewentualnej strefy jako UTC)
         df["time_tag"] = pd.to_datetime(df["time_tag"], errors="coerce", utc=True)
+        df["begin_time"] = pd.to_datetime(df["begin_time"], errors="coerce", utc=True)
 
         # 2) Usuwamy strefę czasową, staje się „naiwny” czas
         df["time_tag"] = df["time_tag"].dt.tz_localize(None)
@@ -38,7 +39,17 @@ class DataPlot:
 
         # 4) Formatowanie do "YYYY-MM-DD HH:MM:SS"
         df["time_tag"] = df["time_tag"].dt.strftime("%d-%m-%Y %H:%M")
+        df["begin_time"] = df["begin_time"].dt.strftime("%d-%m-%Y %H:%M")
         df.index = [""] * len(df)  # Ustawiamy puste etykiety dla każdego wiersza
+
+        df.rename(columns={
+            "time_tag": "Znacznik czasu",
+            "satellite": "Satelita",
+            "current_class": "Klasa rozbłysku",
+            "current_ratio": "Stosunek promieniowania",
+            "current_int_xrlong": "Natężenie promieniowania",
+            "begin_time": "Czas rozpoczęcia"
+        }, inplace=True)
 
         return df
 
@@ -55,10 +66,14 @@ class DataPlot:
             "ID",
             "time_tag",
             "proton_speed",
-            "proton_density"
+            "proton_density",
+            "proton_temperature"
         ])
 
+        df["proton_temperature"] = df["proton_temperature"].apply(lambda x: f"{x:.2e}")
+        df["proton_speed"] = df["proton_speed"].apply(lambda x: f"{x:.2f}")
         df.drop(columns=["ID"], inplace=True)
+
 
         # Konwersja na datetime z interpretacją strefy jako UTC
         df['time_tag'] = pd.to_datetime(df['time_tag'])
@@ -69,6 +84,13 @@ class DataPlot:
         # Formatowanie
         df["time_tag"] = df["time_tag"].dt.strftime("%d-%m-%Y %H:%M")
         df.index = [""] * len(df)  # Ustawiamy puste etykiety dla każdego wiersza
+
+        df.rename(columns={
+            "time_tag": "Znacznik czasu",
+            "proton_speed": "Prędkość protonów [km/s]",
+            "proton_density": "Gęstość protonów [cm³]",
+            "proton_temperature": "Temperatura protonów [K]"
+        }, inplace=True)
 
         return df
 
@@ -233,6 +255,90 @@ class DataPlot:
             y="proton_density",
             title="Gęstość protonów w czasie",
             labels={"time_tag": "Czas", "proton_density": "Gęstość (protons/cm3)"}
+        )
+        fig.update_layout(width=800, height=500)
+
+        return fig
+
+    @staticmethod
+    def create_solarwind_temp_line_plot(df):
+        """
+        Tworzy wykres liniowy z danymi wiatru słonecznego (temperatury protonów w czasie).
+        Zamiast jednego dwustronnego suwaka, mamy dwa osobne suwaki:
+         - 'start_dt' (data początkowa)
+         - 'end_dt' (data końcowa).
+
+        df to DataFrame z kolumnami:
+         - 'time_tag' (string lub datetime)
+         - 'proton_density'
+         - 'proton_temperature'
+        """
+
+        # 1. Kopiujemy DF, by nie modyfikować oryginału
+        df_plot = df.copy()
+
+        # 2. Konwertujemy 'time_tag' na datetime (jeśli to już datetime, errors="coerce" nie zaszkodzi)
+        df_plot["time_tag"] = pd.to_datetime(df_plot["time_tag"], errors="coerce")
+
+        # 3. Sprawdzamy, czy nie mamy pustego DF lub samych NaT w time_tag
+        if df_plot.empty or df_plot["time_tag"].isna().all():
+            st.warning("Brak poprawnych danych w 'time_tag' do wyświetlenia wykresu.")
+            return None  # Nie zwracamy wykresu
+
+        # 4. Wyznaczamy min i max (mogą być pd.Timestamp), więc konwertujemy na natywne datetime
+        min_dt = df_plot["time_tag"].min()
+        max_dt = df_plot["time_tag"].max()
+
+        if pd.isna(min_dt) or pd.isna(max_dt):
+            st.warning("Brak poprawnego zakresu czasu.")
+            return None
+
+        # Konwersja do obiektu datetime.datetime (jeśli to pd.Timestamp)
+        if isinstance(min_dt, pd.Timestamp):
+            min_dt = min_dt.to_pydatetime()
+        if isinstance(max_dt, pd.Timestamp):
+            max_dt = max_dt.to_pydatetime()
+
+        # 5. Suwak dla daty początkowej
+        start_dt = st.slider(
+            "Wybierz datę/godzinę początkową:",
+            min_value=min_dt,
+            max_value=max_dt,
+            value=min_dt,
+            format="DD-MM-YYYY HH:mm",
+            key="start_temp_dt_slider"
+        )
+
+        # 6. Suwak dla daty końcowej
+        end_dt = st.slider(
+            "Wybierz datę/godzinę końcową:",
+            min_value=min_dt,
+            max_value=max_dt,
+            value=max_dt,
+            format="DD-MM-YYYY HH:mm",
+            key="end_temp_dt_slider"
+        )
+
+        # Upewniamy się, że end_dt >= start_dt (można np. zabezpieczyć się warunkiem)
+        if end_dt < start_dt:
+            st.warning("Data końcowa jest wcześniejsza niż data początkowa!")
+            return None
+
+        # 7. Filtrowanie DF do wybranego zakresu
+        mask = (df_plot["time_tag"] >= start_dt) & (df_plot["time_tag"] <= end_dt)
+        df_filtered = df_plot[mask]
+
+        if df_filtered.empty:
+            st.warning("Nie ma danych w wybranym przedziale czasowym.")
+            return None
+
+        # 8. Tworzymy wykres liniowy (Plotly Express)
+        fig = px.line(
+            df_filtered,
+            x="time_tag",
+            y="proton_temperature",
+            title="Temperatura protonów w czasie",
+            labels={"time_tag": "Czas", "proton_temperature": "Temperatura (K)"}
         )
         fig.update_layout(width=800, height=500)
 

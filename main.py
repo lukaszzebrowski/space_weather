@@ -69,7 +69,8 @@ class SpaceWeatherDashboard:
         if not self.db.check_solarwind_exists(time_tag):
             proton_speed = latest.get("proton_speed", 0.0)
             proton_density = latest.get("proton_density", 0.0)
-            self.db.insert_solarwind(time_tag, proton_speed, proton_density)
+            proton_temperature = latest.get("proton_temperature", 0.0)  # dodanie temperatury do bazy
+            self.db.insert_solarwind(time_tag, proton_speed, proton_density, proton_temperature)
         return time_tag
 
     def fetch_and_save_xray(self):
@@ -119,7 +120,7 @@ class SpaceWeatherDashboard:
             latest_sw = self.db.get_latest_solarwind()
             if latest_sw:
                 # (id, time_tag, proton_speed, proton_density)
-                _, time_tag_db, speed_db, density_db = latest_sw
+                _, time_tag_db, speed_db, density_db, *rest = latest_sw
 
                 gauge_fig = GaugePlot.create_gauge(speed_db, density_db, time_tag_db)
                 st.plotly_chart(gauge_fig, use_container_width=True)

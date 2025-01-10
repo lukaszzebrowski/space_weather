@@ -28,7 +28,8 @@ class DBManager:
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 time_tag TEXT NOT NULL,
                 proton_speed REAL,
-                proton_density REAL
+                proton_density REAL,
+                proton_temperature INTEGER
             )
         ''')
 
@@ -72,13 +73,13 @@ class DBManager:
         return rows
 
     # ------------------ SOLAR WIND ------------------
-    def insert_solarwind(self, time_tag, proton_speed, proton_density):
+    def insert_solarwind(self, time_tag, proton_speed, proton_density, proton_temperature):
         conn = sqlite3.connect(self.db_name)
         c = conn.cursor()
         c.execute("""
-            INSERT INTO solarwind (time_tag, proton_speed, proton_density)
-            VALUES (?, ?, ?)
-        """, (time_tag, proton_speed, proton_density))
+            INSERT INTO solarwind (time_tag, proton_speed, proton_density, proton_temperature)
+            VALUES (?, ?, ?, ?)
+        """, (time_tag, proton_speed, proton_density, proton_temperature))
         conn.commit()
         conn.close()
 
@@ -98,13 +99,13 @@ class DBManager:
         c = conn.cursor()
         if limit is None:  # Jeśli limit jest None, pobierz wszystko
             c.execute("""
-                SELECT id, time_tag, proton_speed, proton_density
+                SELECT id, time_tag, proton_speed, proton_density, proton_temperature
                 FROM solarwind
                 ORDER BY id DESC
             """)
         else:  # Jeśli limit jest ustawiony, ogranicz wyniki
             c.execute("""
-                SELECT id, time_tag, proton_speed, proton_density
+                SELECT id, time_tag, proton_speed, proton_density, proton_temperature
                 FROM solarwind
                 ORDER BY id DESC
                 LIMIT ?
@@ -120,7 +121,7 @@ class DBManager:
         conn = sqlite3.connect(self.db_name)
         c = conn.cursor()
         c.execute("""
-            SELECT id, time_tag, proton_speed, proton_density
+            SELECT id, time_tag, proton_speed, proton_density, proton_temperature
             FROM solarwind
             ORDER BY id DESC
             LIMIT 1
