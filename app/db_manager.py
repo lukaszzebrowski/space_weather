@@ -54,6 +54,18 @@ class DBManager:
                    )
                ''')
 
+        # Tabela do przechowywania obrazów
+        c.execute('''
+                CREATE TABLE IF NOT EXISTS solar_images (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    source TEXT NOT NULL,       -- Nazwa źródła (SOHO C2, SOHO C3, SDO HMI)
+                    image BLOB NOT NULL,        -- Obraz w formacie BLOB
+                    image_hash TEXT NOT NULL,   -- Hash obrazu
+                    time_tag TEXT NOT NULL,     -- Znacznik czasu pobrania
+                    UNIQUE(source, image_hash)  -- Zapobiega duplikatom
+                )
+            ''')
+
         conn.commit()
         conn.close()
 
@@ -232,3 +244,44 @@ class DBManager:
         columns = [description[0] for description in c.description]
         conn.close()
         return rows, columns
+
+    def check_image_exists(self, source, image_hash):
+        """Sprawdza, czy obraz o danym hashu już istnieje w bazie."""
+        conn = sqlite3.connect(self.db_name)
+        c = conn.cursor()
+        c.execute("SELECT 1 FROM solar_images WHERE source = ? AND image_hash = ?", (source, image_hash))
+        exists = c.fetchone() is not None
+        conn.close()
+        return exists
+
+    def insert_solar_image(self, source, image_data, image_hash, time_tag):
+        """Zapisuje obraz do bazy danych."""
+        conn = sqlite3.connect(self.db_name)
+        c = conn.cursor()
+        c.execute("""
+            INSERT INTO solar_images (source, image, image_hash, time_tag)
+            VALUES (?, ?, ?, ?)
+        """, (source, image_data, image_hash, time_tag))
+        conn.commit()
+        conn.close()
+
+    def get_latest_solar_images(self):
+        """Zwraca najnowsze obrazy z każdego źródła."""
+        conn = sqlite3.connect(self.db_name)
+        c = conn.cursor()
+
+        # Pobiera najnowszy obraz dla każdego źródła
+        c.execute("""
+            SELECT source, image, time_tag
+            FROM solar_images
+            WHERE (source, time_tag) IN (
+                SELECT source, MAX(time_tag)
+                FROM solar_images
+                GROUP BY source
+            )
+        """)
+
+        images = c.fetchall()
+        conn.close()
+        return images
+

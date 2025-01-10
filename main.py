@@ -5,7 +5,8 @@ import pandas as pd
 
 # Nasze moduły
 from app.db_manager import DBManager
-from app.data_fetcher import NOAADataFetcher, XRayDataFetcher, APODDataFetcher, GOESSecondaryFetcher, GOESPrimaryFetcher
+from app.data_fetcher import (NOAADataFetcher, XRayDataFetcher, APODDataFetcher,
+                              GOESSecondaryFetcher, GOESPrimaryFetcher, SolarImageFetcher)
 from app.plot import DataPlot
 from app.gauge import GaugePlot
 
@@ -52,6 +53,9 @@ class SpaceWeatherDashboard:
 
         # Inicjalizacja fetchera dla GOES Secondary
         self.goes_secondary_fetcher = GOESSecondaryFetcher()
+
+        # Inicjalizacja pobierania obrazów
+        self.image_fetcher = SolarImageFetcher()
 
         self.last_refresh = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     def set_dashboard_background(self):
@@ -163,6 +167,21 @@ class SpaceWeatherDashboard:
                     energy
                 )
 
+    def fetch_and_save_solar_images(self):
+        """Pobiera i zapisuje obrazy SOHO/SDO do bazy danych."""
+        images = self.image_fetcher.fetch_images()
+        for img in images:
+            if not self.db.check_image_exists(img["source"], img["image_hash"]):
+                self.db.insert_solar_image(
+                    img["source"],
+                    img["image_data"],
+                    img["image_hash"],
+                    img["time_tag"]
+                )
+                print(f"Zapisano nowy obraz: {img['source']}")
+            else:
+                print(f"Obraz z {img['source']} już istnieje. Pomijam zapis.")
+
     def render_dashboard(self):
         st.markdown("<h1 style='text-align: center;'>Dashboard pogody kosmicznej</h1>", unsafe_allow_html=True)
         st.markdown(f"<h4 style='text-align: right;'>Ostatnie odświeżenie: {self.last_refresh}</h4>", unsafe_allow_html=True)
@@ -228,23 +247,15 @@ class SpaceWeatherDashboard:
                 st.warning("Brak danych o najnowszym rozbłysku X-Ray.")
 
         with col2:
-            st.subheader("Obrazy Słońca (SOHO)")
-            st.image(
-                "https://soho.nascom.nasa.gov/data/realtime/c2/1024/latest.jpg",
-                caption="SOHO LASCO C2",
-                use_container_width=True
-            )
-            st.image(
-                "https://soho.nascom.nasa.gov/data/realtime/c3/1024/latest.jpg",
-                caption="SOHO LASCO C3",
-                use_container_width=True
-            )
-            # Dodaj obraz SDO/HMI
-            st.image(
-                "https://soho.nascom.nasa.gov/data/realtime/hmi_igr/1024/latest.jpg",
-                caption="SDO/HMI Continuum Image",
-                use_container_width=True
-            )
+            st.subheader("Obrazy Słońca (SOHO/SDO)")
+
+            images = self.db.get_latest_solar_images()
+
+            if images:
+                for source, image_data, time_tag in images:
+                    st.image(image_data, caption=f"{source} (pobrano: {time_tag})",use_container_width=True)
+            else:
+                st.warning("Brak zapisanych obrazów w bazie.")
 
     def run(self):
         # Ustaw tło
@@ -262,6 +273,9 @@ class SpaceWeatherDashboard:
 
         # Pobierz i zapisz dane GOES (Primary i Secondary)
         self.fetch_and_save_goes()
+
+        # Pobierz i zapisz obrazy SOHO/SDO
+        self.fetch_and_save_solar_images()
 
         # Renderowanie dashboardu
         self.render_dashboard()

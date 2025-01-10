@@ -3,3 +3,12 @@ streamlit-autorefresh
 plotly
 pandas
 numpy
+sqlite3
+datetime
+requests
+hashlib
+os
+dotenv
+requests
+plotly.graph_objects
+plotly.express
