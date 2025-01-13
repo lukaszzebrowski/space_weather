@@ -5,11 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e9e9135a-8bc8-4d31-be99-bc4791c709b7" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.dockerignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/gif_utils.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pages/Solar GIF.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gaia.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/db_manager.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/db_manager.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/plot.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/plot.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/DB_view.py" beforeDir="false" afterPath="$PROJECT_DIR$/pages/Data_Base_View.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/X_Ray_flux.py" beforeDir="false" afterPath="$PROJECT_DIR$/pages/X_Ray_Flux.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/solar_wind_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/pages/Solar_Wind_Data.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/space_weather.db" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,6 +58,7 @@
     &quot;Python.tuya.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;C:/Users/lukze/Desktop/Inżynier&quot;,
@@ -264,6 +272,10 @@
       <workItem from="1736522041489" duration="1257000" />
       <workItem from="1736528725894" duration="84000" />
       <workItem from="1736528843962" duration="884000" />
+      <workItem from="1736752280856" duration="1785000" />
+      <workItem from="1736754271935" duration="1056000" />
+      <workItem from="1736755357280" duration="15271000" />
+      <workItem from="1736775444865" duration="864000" />
     </task>
     <servers />
   </component>

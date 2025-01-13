@@ -1,4 +1,5 @@
 import sqlite3
+import pandas as pd
 
 class DBManager:
     def __init__(self, db_name="space_weather.db"):
@@ -285,3 +286,25 @@ class DBManager:
         conn.close()
         return images
 
+    def get_solar_images_for_sources_in_range(self, start_time, end_time, sources):
+        """
+        Pobiera obrazy w przedziale [start_time, end_time] dla listy źródeł (sources).
+        """
+        placeholders = ", ".join(["?"] * len(sources))
+        sql = f"""
+            SELECT source, image, time_tag
+            FROM solar_images
+            WHERE time_tag >= ?
+              AND time_tag <= ?
+              AND source IN ({placeholders})
+            ORDER BY time_tag ASC
+        """
+        # Parametry: start_time, end_time, potem rozpakowana lista 'sources'
+        params = [start_time, end_time] + list(sources)
+
+        conn = sqlite3.connect(self.db_name)
+        c = conn.cursor()
+        c.execute(sql, params)
+        rows = c.fetchall()
+        conn.close()
+        return rows

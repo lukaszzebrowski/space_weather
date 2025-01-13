@@ -4,13 +4,20 @@ import streamlit as st
 
 
 class DataPlot:
-    @staticmethod
+
     @staticmethod
     def create_xray_event_table(event_data):
         """
         Tworzy tabelę dla najnowszego rozbłysku X-Ray w formacie:
         Current, Beginning, Maximum, End.
+        Oczekujemy, że event_data to krotka o polach:
+        (
+          satellite, current_class, current_ratio, current_int_xrlong,
+          begin_time, begin_class, max_time, max_class,
+          max_xrlong, end_time, end_class
+        )
         """
+
         if not event_data:
             st.warning("Brak danych o rozbłysku X-Ray.")
             return None
@@ -19,22 +26,43 @@ class DataPlot:
          begin_time, begin_class, max_time, max_class,
          max_xrlong, end_time, end_class) = event_data
 
-        # Tworzymy DataFrame z gotowymi wpisami
+        def parse_time(time_str):
+            """
+            Funkcja pomocnicza do konwersji czasu na format '%d %b %Y %H:%M:%S GMT'.
+            Jeśli time_str to 'Unk' lub nie da się sparsować, zwraca 'N/A'.
+            """
+            if not time_str or time_str == "Unk":
+                return "N/A"
+            dt = pd.to_datetime(time_str, errors="coerce")
+            if pd.isna(dt):
+                return "N/A"
+            return dt.strftime("%d %b %Y %H:%M:%S GMT")
+
+        # Konwersja pól czasowych:
+        # W oryginalnym kodzie 'Current' i 'Beginning' używały begin_time,
+        # jeśli chcesz inny czas dla Current, musisz go pobrać z innego pola.
+        current_str = parse_time(begin_time)
+        begin_str = parse_time(begin_time)
+        max_str = parse_time(max_time)
+        end_str = parse_time(end_time)
+
+        # Obsługa current_ratio
+        try:
+            ratio_str = f"Ratio {float(current_ratio):.3f}"
+        except (ValueError, TypeError):
+            ratio_str = "Ratio N/A"
+
+        # Obsługa max_xrlong
+        try:
+            flux_str = f"Integrated flux: {float(max_xrlong):.1e} J m-2"
+        except (ValueError, TypeError):
+            flux_str = "Integrated flux: N/A"
+
         data = {
             "Faza": ["Current", "Beginning", "Maximum", "End"],
-            "Czas": [
-                pd.to_datetime(begin_time).strftime("%d %b %Y %H:%M:%S GMT"),
-                pd.to_datetime(begin_time).strftime("%d %b %Y %H:%M:%S GMT"),
-                pd.to_datetime(max_time).strftime("%d %b %Y %H:%M:%S GMT"),
-                pd.to_datetime(end_time).strftime("%d %b %Y %H:%M:%S GMT")
-            ],
+            "Czas": [current_str, begin_str, max_str, end_str],
             "Klasa rozbłysku": [current_class, begin_class, max_class, end_class],
-            "Dodatkowe dane": [
-                f"Ratio {current_ratio:.3f}",
-                "",
-                f"Integrated flux: {max_xrlong:.1e} J m-2",
-                ""
-            ]
+            "Dodatkowe dane": [ratio_str, "", flux_str, ""]
         }
 
         df = pd.DataFrame(data)
@@ -330,10 +358,6 @@ class DataPlot:
         fig.update_layout(width=800, height=500)
 
         return fig
-
-    import plotly.express as px
-    import pandas as pd
-    import streamlit as st
 
     @staticmethod
     def create_goes_flux_line_plot(df):

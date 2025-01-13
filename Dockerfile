@@ -9,8 +9,6 @@ COPY . /app
 
 COPY .env /app/.env
 
-ENV STREAMLIT_BROWSER_GATHERUSAGESTATS=false
-
 # 4. Instalacja zależności
 RUN pip install --upgrade pip --root-user-action=ignore && pip install -r requirements.txt
 

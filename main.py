@@ -71,7 +71,7 @@ class SpaceWeatherDashboard:
         if not data:
             return None
 
-        latest = data[-1]  # ostatni pomiar
+        latest = data[0]  # ostatni pomiar
         time_tag = latest.get("time_tag", None)
         if not time_tag:
             return None
