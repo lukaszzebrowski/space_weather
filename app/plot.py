@@ -485,7 +485,7 @@ class DataPlot:
                 "flux": "Natężenie promieniowania (W/m²)",
                 "satellite": "Satelita"
             },
-            title="Natężenie promieniowania X-ray GOES-16 i GOES-18 (20 ostatnich wyników)"
+            title="Natężenie promieniowania X-ray GOES-16 i GOES-18"
         )
 
         fig.update_layout(

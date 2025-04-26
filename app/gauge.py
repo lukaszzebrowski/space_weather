@@ -4,9 +4,7 @@ from datetime import datetime
 class GaugePlot:
     @staticmethod
     def create_gauge(speed, density, time_tag):
-        # Formatowanie daty: dzień-miesiąc-rok godzina:minuta
         formatted_time_tag = datetime.strptime(time_tag, "%Y-%m-%dT%H:%M:%S").strftime("%d-%m-%Y %H:%M")
-        """Tworzy wykres gauge z podanymi danymi."""
         fig = go.Figure(go.Indicator(
             mode="gauge+number",
             value=speed,

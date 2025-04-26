@@ -5,18 +5,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e9e9135a-8bc8-4d31-be99-bc4791c709b7" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/gif_utils.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pages/Solar GIF.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/classes_MyProject.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages_MyProject.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/stat.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/wykres_zb_i_proc.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/data_fetcher.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/data_fetcher.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/db_manager.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/db_manager.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/gauge.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/gauge.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/gif_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/gif_utils.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/plot.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/plot.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/DB_view.py" beforeDir="false" afterPath="$PROJECT_DIR$/pages/Data_Base_View.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/X_Ray_flux.py" beforeDir="false" afterPath="$PROJECT_DIR$/pages/X_Ray_Flux.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/solar_wind_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/pages/Solar_Wind_Data.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/space_weather.db" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/Data_Base_View.py" beforeDir="false" afterPath="$PROJECT_DIR$/pages/Data_Base_View.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/Solar GIF.py" beforeDir="false" afterPath="$PROJECT_DIR$/pages/Solar GIF.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/Solar_Wind_Data.py" beforeDir="false" afterPath="$PROJECT_DIR$/pages/Solar_Wind_Data.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/X_Ray_Flux.py" beforeDir="false" afterPath="$PROJECT_DIR$/pages/X_Ray_Flux.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/space_weather.db" beforeDir="false" afterPath="$PROJECT_DIR$/space_weather.db" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,18 +44,23 @@
   &quot;associatedIndex&quot;: 0
 }</component>
   <component name="ProjectId" id="2eEztvbCPe1Ops0MUGEX48poyGx" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
     &quot;Python.Unnamed.executor&quot;: &quot;Run&quot;,
     &quot;Python.gaia.executor&quot;: &quot;Run&quot;,
     &quot;Python.gromady.executor&quot;: &quot;Run&quot;,
     &quot;Python.main.executor&quot;: &quot;Run&quot;,
     &quot;Python.solar_wind.executor&quot;: &quot;Run&quot;,
     &quot;Python.space_weather.executor&quot;: &quot;Run&quot;,
+    &quot;Python.stat.executor&quot;: &quot;Run&quot;,
     &quot;Python.test.executor&quot;: &quot;Run&quot;,
     &quot;Python.test2.executor&quot;: &quot;Run&quot;,
     &quot;Python.test3.executor&quot;: &quot;Run&quot;,
@@ -67,7 +76,7 @@
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.ide.settings.uml&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
@@ -275,7 +284,16 @@
       <workItem from="1736752280856" duration="1785000" />
       <workItem from="1736754271935" duration="1056000" />
       <workItem from="1736755357280" duration="15271000" />
-      <workItem from="1736775444865" duration="864000" />
+      <workItem from="1736775444865" duration="997000" />
+      <workItem from="1736779609432" duration="2086000" />
+      <workItem from="1738054789445" duration="2041000" />
+      <workItem from="1738056851064" duration="2217000" />
+      <workItem from="1738060469287" duration="372000" />
+      <workItem from="1744803304867" duration="257000" />
+      <workItem from="1745413289098" duration="893000" />
+      <workItem from="1745569221526" duration="693000" />
+      <workItem from="1745618927397" duration="701000" />
+      <workItem from="1745624475013" duration="2036000" />
     </task>
     <servers />
   </component>
@@ -293,6 +311,9 @@
       </map>
     </option>
   </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+  </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Inynier$gromady.coverage" NAME="gromady Coverage Results" MODIFIED="1729592596788" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/LOFAR" />
     <SUITE FILE_PATH="coverage/Inynier$test3.coverage" NAME="test3 Coverage Results" MODIFIED="1732963062487" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
@@ -302,6 +323,7 @@
     <SUITE FILE_PATH="coverage/Inynier$main.coverage" NAME="main Coverage Results" MODIFIED="1715673068611" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/LOFAR" />
     <SUITE FILE_PATH="coverage/Inynier$space_weather.coverage" NAME="space_weather Coverage Results" MODIFIED="1729585966875" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/LOFAR" />
     <SUITE FILE_PATH="coverage/Inynier$solar_wind.coverage" NAME="solar_wind Coverage Results" MODIFIED="1734619821227" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Inynier$stat.coverage" NAME="stat Coverage Results" MODIFIED="1738060822793" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Inynier$test2.coverage" NAME="test2 Coverage Results" MODIFIED="1732963013295" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

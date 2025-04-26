@@ -1,5 +1,4 @@
 import sqlite3
-import pandas as pd
 
 class DBManager:
     def __init__(self, db_name="space_weather.db"):
@@ -10,7 +9,6 @@ class DBManager:
         conn = sqlite3.connect(self.db_name)
         c = conn.cursor()
 
-        # Tabela X-Ray
         c.execute('''
             CREATE TABLE IF NOT EXISTS xray (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -29,7 +27,6 @@ class DBManager:
             )
         ''')
 
-        # Tabela wiatru słonecznego
         c.execute('''
             CREATE TABLE IF NOT EXISTS solarwind (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -40,7 +37,6 @@ class DBManager:
             )
         ''')
 
-        # Tabela danych GOES (Primary/Secondary)
         c.execute('''
                    CREATE TABLE IF NOT EXISTS goes_data (
                        id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -55,7 +51,6 @@ class DBManager:
                    )
                ''')
 
-        # Tabela do przechowywania obrazów
         c.execute('''
                 CREATE TABLE IF NOT EXISTS solar_images (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -72,7 +67,6 @@ class DBManager:
 
     def insert_xray(self, time_tag, satellite, current_class, current_ratio, current_int_xrlong,
                     begin_time, begin_class, max_time, max_class, max_xrlong, end_time, end_class):
-        """Zapisuje dane X-Ray do bazy danych."""
         conn = sqlite3.connect(self.db_name)
         c = conn.cursor()
         c.execute("""
@@ -116,7 +110,6 @@ class DBManager:
         return (row is not None)
 
     def get_latest_xray_event(self):
-        """Zwraca najnowsze zdarzenie X-Ray ze wszystkimi szczegółami."""
         conn = sqlite3.connect(self.db_name)
         c = conn.cursor()
         c.execute("""
@@ -151,18 +144,15 @@ class DBManager:
         return (row is not None)
 
     def get_recent_solarwind(self, limit):
-        """
-        Zwraca ostatnie `limit` wpisów z wiatru słonecznego, malejąco po id.
-        """
         conn = sqlite3.connect(self.db_name)
         c = conn.cursor()
-        if limit is None:  # Jeśli limit jest None, pobierz wszystko
+        if limit is None:
             c.execute("""
                 SELECT id, time_tag, proton_speed, proton_density, proton_temperature
                 FROM solarwind
                 ORDER BY id DESC
             """)
-        else:  # Jeśli limit jest ustawiony, ogranicz wyniki
+        else:
             c.execute("""
                 SELECT id, time_tag, proton_speed, proton_density, proton_temperature
                 FROM solarwind
@@ -174,9 +164,6 @@ class DBManager:
         return rows
 
     def get_latest_solarwind(self):
-        """
-        Zwraca najnowszy wiersz z wiatru słonecznego (1 pomiar), lub None jeśli brak.
-        """
         conn = sqlite3.connect(self.db_name)
         c = conn.cursor()
         c.execute("""
@@ -190,7 +177,6 @@ class DBManager:
         return row
 
     def check_goes_data_exists(self, time_tag, satellite):
-        """Sprawdza, czy dane GOES z danym time_tag i satelitą już istnieją."""
         conn = sqlite3.connect(self.db_name)
         c = conn.cursor()
         c.execute("""
@@ -203,7 +189,6 @@ class DBManager:
 
     def insert_goes_data(self, time_tag, satellite, flux, observed_flux, electron_correction, electron_contamination,
                          energy):
-        """Dodaje nowy wpis GOES do bazy danych."""
         conn = sqlite3.connect(self.db_name)
         c = conn.cursor()
         c.execute("""
@@ -215,7 +200,6 @@ class DBManager:
         conn.close()
 
     def get_recent_goes_data(self, limit):
-        """Zwraca ostatnie `limit` wpisów z tabeli GOES."""
         conn = sqlite3.connect(self.db_name)
         c = conn.cursor()
         if limit is None:
@@ -237,7 +221,6 @@ class DBManager:
         return rows
 
     def get_all_from_table(self, table_name):
-        """Zwraca wszystkie dane z wybranej tabeli."""
         conn = sqlite3.connect(self.db_name)
         c = conn.cursor()
         c.execute(f"SELECT * FROM {table_name}")
@@ -247,7 +230,6 @@ class DBManager:
         return rows, columns
 
     def check_image_exists(self, source, image_hash):
-        """Sprawdza, czy obraz o danym hashu już istnieje w bazie."""
         conn = sqlite3.connect(self.db_name)
         c = conn.cursor()
         c.execute("SELECT 1 FROM solar_images WHERE source = ? AND image_hash = ?", (source, image_hash))
@@ -256,7 +238,6 @@ class DBManager:
         return exists
 
     def insert_solar_image(self, source, image_data, image_hash, time_tag):
-        """Zapisuje obraz do bazy danych."""
         conn = sqlite3.connect(self.db_name)
         c = conn.cursor()
         c.execute("""
@@ -267,11 +248,9 @@ class DBManager:
         conn.close()
 
     def get_latest_solar_images(self):
-        """Zwraca najnowsze obrazy z każdego źródła."""
         conn = sqlite3.connect(self.db_name)
         c = conn.cursor()
 
-        # Pobiera najnowszy obraz dla każdego źródła
         c.execute("""
             SELECT source, image, time_tag
             FROM solar_images
@@ -287,9 +266,6 @@ class DBManager:
         return images
 
     def get_solar_images_for_sources_in_range(self, start_time, end_time, sources):
-        """
-        Pobiera obrazy w przedziale [start_time, end_time] dla listy źródeł (sources).
-        """
         placeholders = ", ".join(["?"] * len(sources))
         sql = f"""
             SELECT source, image, time_tag
@@ -299,7 +275,6 @@ class DBManager:
               AND source IN ({placeholders})
             ORDER BY time_tag ASC
         """
-        # Parametry: start_time, end_time, potem rozpakowana lista 'sources'
         params = [start_time, end_time] + list(sources)
 
         conn = sqlite3.connect(self.db_name)
