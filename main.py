@@ -3,34 +3,19 @@ from datetime import datetime
 from streamlit_autorefresh import st_autorefresh
 import pandas as pd
 
-# Nasze moduły
 from app.db_manager import DBManager
-from app.data_fetcher import (NOAADataFetcher, XRayDataFetcher, APODDataFetcher,
+from app.data_fetcher import (NOAADataFetcher, XRayDataFetcher,
                               GOESSecondaryFetcher, GOESPrimaryFetcher, SolarImageFetcher)
 from app.plot import DataPlot
 from app.gauge import GaugePlot
 
-# Ustawienia strony Streamlit
 st.set_page_config(
     layout="wide",
     page_title="Dashboard Pogody Kosmicznej",
     page_icon="☀️",
     initial_sidebar_state="collapsed"
 )
-def set_background_image(image_url):
-    st.markdown(
-        f"""
-        <style>
-        .stApp {{
-            background-image: url("{image_url}");
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-        }}
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
+
 class SpaceWeatherDashboard:
     def __init__(self):
         self.db = DBManager()
@@ -39,8 +24,6 @@ class SpaceWeatherDashboard:
 
         self.xray_fetcher = XRayDataFetcher()
 
-        self.apod_fetcher = APODDataFetcher()
-
         self.goes_primary_fetcher = GOESPrimaryFetcher()
 
         self.goes_secondary_fetcher = GOESSecondaryFetcher()
@@ -48,10 +31,7 @@ class SpaceWeatherDashboard:
         self.image_fetcher = SolarImageFetcher()
 
         self.last_refresh = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    def set_dashboard_background(self):
-        image_url = self.apod_fetcher.fetch_background_image_url()
-        if image_url:
-            set_background_image(image_url)
+
     def fetch_and_save_solarwind(self):
         data = self.wind_fetcher.fetch_data()
         if not data:
@@ -62,7 +42,6 @@ class SpaceWeatherDashboard:
         if not time_tag:
             return None
 
-        # Sprawdzamy w bazie
         if not self.db.check_solarwind_exists(time_tag):
             proton_speed = latest.get("proton_speed", 0.0)
             proton_density = latest.get("proton_density", 0.0)
@@ -222,7 +201,6 @@ class SpaceWeatherDashboard:
                 st.warning("Brak zapisanych obrazów w bazie.")
 
     def run(self):
-        self.set_dashboard_background()
 
         st_autorefresh(interval=60000, limit=None, key="data_refresh")
         self.last_refresh = datetime.now().strftime("%Y-%m-%d %H:%M:%S")

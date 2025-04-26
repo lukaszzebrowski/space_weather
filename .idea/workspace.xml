@@ -5,21 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e9e9135a-8bc8-4d31-be99-bc4791c709b7" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/classes_MyProject.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages_MyProject.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/stat.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/wykres_zb_i_proc.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/data_fetcher.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/data_fetcher.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/db_manager.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/db_manager.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/gauge.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/gauge.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/gif_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/gif_utils.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/plot.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/plot.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/Data_Base_View.py" beforeDir="false" afterPath="$PROJECT_DIR$/pages/Data_Base_View.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/Solar GIF.py" beforeDir="false" afterPath="$PROJECT_DIR$/pages/Solar GIF.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/Solar_Wind_Data.py" beforeDir="false" afterPath="$PROJECT_DIR$/pages/Solar_Wind_Data.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/X_Ray_Flux.py" beforeDir="false" afterPath="$PROJECT_DIR$/pages/X_Ray_Flux.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/space_weather.db" beforeDir="false" afterPath="$PROJECT_DIR$/space_weather.db" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -293,7 +281,7 @@
       <workItem from="1745413289098" duration="893000" />
       <workItem from="1745569221526" duration="693000" />
       <workItem from="1745618927397" duration="701000" />
-      <workItem from="1745624475013" duration="2036000" />
+      <workItem from="1745624475013" duration="2509000" />
     </task>
     <servers />
   </component>

@@ -26,17 +26,6 @@ class XRayDataFetcher:
         data = resp.json()
         return data
 
-class APODDataFetcher:
-    def __init__(self, api_url="https://api.nasa.gov/planetary/apod"):
-        self.api_url = api_url
-        self.api_key = os.getenv("NASA_API_KEY")
-
-    def fetch_background_image_url(self):
-        params = {"api_key": self.api_key}
-        response = requests.get(self.api_url, params=params, timeout=10)
-        response.raise_for_status()
-        data = response.json()
-        return data.get("hdurl", "")
 
 class GOESPrimaryFetcher:
     def __init__(self, url="https://services.swpc.noaa.gov/json/goes/primary/xrays-1-day.json"):
