@@ -9,7 +9,7 @@ from app.gif_utils import create_gif_in_memory
 def show_solar_gif_page():
     st.title("Tworzenie GIF-a (Pillow) z bazy")
 
-    db = DBManager()  # obiekt bazy
+    db = DBManager()
 
     possible_sources = ["SOHO LASCO C2", "SOHO LASCO C3", "SDO HMI Continuum"]
     source = st.selectbox("Wybierz źródło:", possible_sources)

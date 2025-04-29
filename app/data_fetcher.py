@@ -1,6 +1,5 @@
 import requests
 from dotenv import load_dotenv
-import os
 import hashlib
 from datetime import datetime
 
@@ -14,7 +13,7 @@ class NOAADataFetcher:
         resp = requests.get(self.url, timeout=10)
         resp.raise_for_status()
         data = resp.json()
-        return data  # lista pomiarów
+        return data
 
 class XRayDataFetcher:
     def __init__(self, url="https://services.swpc.noaa.gov/json/goes/primary/xray-flares-latest.json"):

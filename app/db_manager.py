@@ -47,18 +47,18 @@ class DBManager:
                        electron_correction REAL,
                        electron_contamination BOOLEAN,
                        energy TEXT,
-                       UNIQUE(time_tag, satellite)  -- Zapobiega duplikatom
+                       UNIQUE(time_tag, satellite)  
                    )
                ''')
 
         c.execute('''
                 CREATE TABLE IF NOT EXISTS solar_images (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    source TEXT NOT NULL,       -- Nazwa źródła (SOHO C2, SOHO C3, SDO HMI)
-                    image BLOB NOT NULL,        -- Obraz w formacie BLOB
-                    image_hash TEXT NOT NULL,   -- Hash obrazu
-                    time_tag TEXT NOT NULL,     -- Znacznik czasu pobrania
-                    UNIQUE(source, image_hash)  -- Zapobiega duplikatom
+                    source TEXT NOT NULL,       
+                    image BLOB NOT NULL,        
+                    image_hash TEXT NOT NULL,   
+                    time_tag TEXT NOT NULL,     
+                    UNIQUE(source, image_hash)  
                 )
             ''')
 
@@ -124,7 +124,6 @@ class DBManager:
         conn.close()
         return row
 
-    # ------------------ SOLAR WIND ------------------
     def insert_solarwind(self, time_tag, proton_speed, proton_density, proton_temperature):
         conn = sqlite3.connect(self.db_name)
         c = conn.cursor()

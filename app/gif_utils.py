@@ -1,4 +1,3 @@
-# gif_utils.py
 from PIL import Image
 from io import BytesIO
 

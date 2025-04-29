@@ -153,6 +153,7 @@ class SpaceWeatherDashboard:
                 st.plotly_chart(gauge_fig, use_container_width=True)
             else:
                 st.warning("Brak danych wiatru słonecznego w bazie.")
+
             st.subheader("Natężenie promieniowania X-Ray (GOES)")
 
             goes_rows = self.db.get_recent_goes_data(limit=20)
