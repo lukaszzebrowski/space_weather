@@ -60,6 +60,7 @@ class DataPlot:
 
         df["proton_temperature"] = df["proton_temperature"].apply(lambda x: f"{x:.2e}")
         df["proton_speed"] = df["proton_speed"].apply(lambda x: f"{x:.2f}")
+        df["proton_density"] = df["proton_density"].apply(lambda x: f"{x:.2f}")
         df.drop(columns=["ID"], inplace=True)
 
         df['time_tag'] = pd.to_datetime(df['time_tag'])
